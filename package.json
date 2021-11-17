@@ -1,0 +1,25 @@
+{
+  "name": "typescript-crowller",
+  "version": "1.0.0",
+  "description": "typescript practice demo",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node ./src/crowller.ts",
+    "build": "tsc -w",
+    "start": "nodemon node ./build/index.js"
+  },
+  "nodemonConfig": {
+    "ignore": ["data/*"]
+  },
+  "author": "mahoo12138",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cheerio": "^0.22.30",
+    "@types/superagent": "^4.1.13",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "superagent": "^6.1.0"
+  }
+}
