@@ -3,11 +3,10 @@ import superagent from "superagent";
 import fs from "fs";
 import path from "path";
 
-import myAnalyzer from "./myAnalyzer";
+import MyAnalyzer from "./myAnalyzer";
 
 export interface Analyzer {
   analyze: (html: string, filePath: string) => string;
-  url: string;
 }
 
 class Crowller {
@@ -28,10 +27,10 @@ class Crowller {
     this.writeDataFile(content);
   }
 
-  constructor(private analyzer: Analyzer) {
+  constructor(private analyzer: MyAnalyzer) {
     this.initCrowllerProcess();
   }
 }
 
-const analyzer = new myAnalyzer();
+const analyzer = MyAnalyzer.getInstance();
 new Crowller(analyzer);

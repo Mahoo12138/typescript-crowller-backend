@@ -1,7 +1,6 @@
 import cheerio from "cheerio";
 import fs from "fs";
-import path from "path";
-import { Analyzer } from './crowller';
+import { Analyzer } from "./crowller";
 
 interface Course {
   title: string;
@@ -16,15 +15,26 @@ interface Content {
 }
 
 export default class MyAnalyzer implements Analyzer {
-  private _url:string = "http://xxx.com/data";
+  private _url: string = "http://xxx.com/data";
 
-  get url(){
+  private static instance: MyAnalyzer;
+
+  static getInstance() {
+    if (!MyAnalyzer.instance) {
+      MyAnalyzer.instance = new MyAnalyzer();
+    }
+    return MyAnalyzer.instance;
+  }
+
+  private constructor() {}
+
+  get url() {
     return this._url;
   }
 
-  analyze(html: string,filePath:string) {
-    const courseInfo:CourseResult = this.getCourseInfo(html);
-    return this.generateJsonContent(courseInfo,filePath);
+  analyze(html: string, filePath: string) {
+    const courseInfo: CourseResult = this.getCourseInfo(html);
+    return this.generateJsonContent(courseInfo, filePath);
   }
 
   private getCourseInfo(html: string) {
