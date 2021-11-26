@@ -38,18 +38,30 @@ export default class MyAnalyzer implements Analyzer {
   }
 
   private getCourseInfo(html: string) {
-    const $ = cheerio.load(html);
-    const courseItem = $(".course-item");
+    // const $ = cheerio.load(html);
+    // const courseItem = $(".course-item");
     const courseInfos: Course[] = [];
-    courseItem.map((index, element) => {
-      const desc = $(element).find(".course-desc");
-      const title = desc.eq(0).text();
-      const count = parseInt(desc.eq(1).text().split("：")[1], 10);
+    // courseItem.map((index, element) => {
+    //   const desc = $(element).find(".course-desc");
+    //   const title = desc.eq(0).text();
+    //   const count = parseInt(desc.eq(1).text().split("：")[1], 10);
+    //   courseInfos.push({
+    //     title,
+    //     count,
+    //   });
+    // });
+    const title = [
+      "2小时极速入门 TypeScript",
+      "自然语言处理（NLP）文本分类实战",
+      "Vite零基础快速入门",
+      "Python数据分析挖掘实战",
+    ];
+    for (let i = 0; i < 4; i++) {
       courseInfos.push({
-        title,
-        count,
+        title: title[i],
+        count: Math.floor(Math.random() * 100) + 30,
       });
-    });
+    }
     return {
       time: new Date().getTime(),
       data: courseInfos,

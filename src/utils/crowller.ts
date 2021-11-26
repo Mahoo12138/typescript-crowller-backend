@@ -1,20 +1,18 @@
-import superagent from "superagent";
-
 import fs from "fs";
 import path from "path";
-
-import MyAnalyzer from "./myAnalyzer";
+import MyAnalyzer from './analyzer'
 
 export interface Analyzer {
   analyze: (html: string, filePath: string) => string;
 }
 
 class Crowller {
-  private filePath = path.resolve(__dirname, "../date/course.json");
+  private filePath = path.resolve(__dirname, "../data/course.json");
 
   async getRawHtml() {
-    const result = await superagent.get(this.analyzer.url);
-    return result.text;
+    // const result = await superagent.get(this.analyzer.url);
+    // return result.text;
+    return "test";
   }
 
   writeDataFile(content: string) {
@@ -32,5 +30,4 @@ class Crowller {
   }
 }
 
-const analyzer = MyAnalyzer.getInstance();
-new Crowller(analyzer);
+export default Crowller;
