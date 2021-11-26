@@ -1,10 +1,20 @@
-import { Router } from "express";
+import { NextFunction, Router, Request, Response } from "express";
 import fs from "fs";
 import path from "path";
-import MyAnalyzer from "./utils/analyzer";
+import Analyzer from "./utils/analyzer";
 import Crowller from "./utils/crowller";
+import { getResponseData } from "./utils/result";
 
 const router = Router();
+
+const checkLogin = (req: Request, res: Response, next: NextFunction) => {
+  const isLogin = req.session ? req.session.login : false;
+  if (isLogin) {
+    next();
+  } else {
+    res.json(getResponseData(null, "请先登录"));
+  }
+};
 
 router.get("/", (req, res) => {
   const isLogin = req.session ? req.session.login : false;
@@ -28,29 +38,19 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/data", (req, res) => {
-  const isLogin = req.session ? req.session.login : false;
-  if (isLogin) {
-    const analyzer = MyAnalyzer.getInstance();
-    new Crowller(analyzer);
-    res.send("GetData OK");
-  } else {
-    res.send("请先登录");
-  }
+router.get("/data", checkLogin, (req, res) => {
+  const analyzer = Analyzer.getInstance();
+  new Crowller(analyzer);
+  res.json(getResponseData(true));
 });
 
-router.get("/show", (req, res) => {
-  const isLogin = req.session ? req.session.login : false;
-  if (isLogin) {
-    try {
-      const position = path.resolve(__dirname, "../data/course.json");
-      const result = fs.readFileSync(position, "utf-8");
-      res.send(JSON.parse(result));
-    } catch (e) {
-      res.send("尚未爬取到内容");
-    }
-  } else {
-    res.send("请先登录");
+router.get("/show", checkLogin, (req, res) => {
+  try {
+    const position = path.resolve(__dirname, "../data/course.json");
+    const result = fs.readFileSync(position, "utf-8");
+    res.send(JSON.parse(result));
+  } catch (e) {
+    res.json(getResponseData(null, "数据不存在"));
   }
 });
 
@@ -58,13 +58,13 @@ router.post("/login", (req, res) => {
   const { password } = req.body;
   const isLogin = req.session ? req.session.login : false;
   if (isLogin) {
-    res.send("已经登陆过");
+    res.json(getResponseData(true, "已经登陆过"));
   } else {
     if (password === "123" && req.session) {
       req.session.login = true;
-      res.send("登陆成功");
+      res.json(getResponseData(true, "登陆成功"));
     } else {
-      res.send("登陆失败");
+      res.json(getResponseData(false, "登陆失败"));
     }
   }
 });
